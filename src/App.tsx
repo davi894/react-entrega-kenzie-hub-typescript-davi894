@@ -1,4 +1,4 @@
-import { AppStyled, StyledContainer, GlobalStyled } from "./App.style.js";
+import { AppStyled, StyledContainer, GlobalStyled } from "./App.style";
 
 import Routes from "./routes";
 

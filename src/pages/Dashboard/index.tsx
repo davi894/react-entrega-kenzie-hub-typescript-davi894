@@ -1,17 +1,20 @@
-import { Link, Navigate, useNavigate } from "react-router-dom";
-import SectionStyledError from "./style.js";
+import { Navigate, useNavigate } from "react-router-dom";
+import SectionStyledError from "./style";
 
 import { ReactComponent as SvgLixeira } from "../../assets/lixeiroSVG/Vector.svg";
 
-import ModalAdicionarTech from "../../components/ModalAdicionarTech/index.jsx";
+import ModalAdicionarTech from "../../components/ModalAdicionarTech/index";
 
-import { TechContextUserFunction } from "../../context/TechContext.jsx";
-import { ContexteDadosUserFunction } from "../../context/ContextDadosUser.jsx";
+import { TechContext } from "../../context/TechContext";
+
+import { DadosUser } from "../../context/ContextDadosUser";
+
+import { useContext } from "react";
 
 function Dashboard() {
-  const { infoUserLogin, userTech } = ContexteDadosUserFunction();
+  const { infoUserLogin, userTech } = useContext(DadosUser)
 
-  const { removerTech, setModal, modal } = TechContextUserFunction();
+  const { removerTech, setModal, modal } = useContext(TechContext)
 
   const navigate = useNavigate();
 
@@ -31,8 +34,8 @@ function Dashboard() {
             </button>
           </header>
           <div>
-            <h2>Olá, {infoUserLogin.name}!</h2>
-            <p>{infoUserLogin.course_module}</p>
+            <h2>Olá, {infoUserLogin?.name}!</h2>
+            <p>{infoUserLogin?.course_module}</p>
           </div>
           <article>
             <div>
@@ -47,7 +50,7 @@ function Dashboard() {
                     <h2>{elem.title}</h2>
                     <div>
                       <span>{elem.status}</span>
-                      <SvgLixeira onClick={() => removerTech(elem.id)} />
+                      <SvgLixeira onClick={() => removerTech(elem)} />
                     </div>
                   </li>
                 );
@@ -56,7 +59,7 @@ function Dashboard() {
           </article>
         </SectionStyledError>
       ) : (
-        <Navigate to="/login" replace="true" />
+        <Navigate to="/login" />
       )}
     </>
   );

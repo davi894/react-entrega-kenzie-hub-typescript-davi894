@@ -1,20 +1,38 @@
-import instanceAxios from "../services/Axios/Axios.js";
+import instanceAxios from "../services/Axios/Axios";
 
 import { useNavigate } from "react-router-dom";
 
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState, SetStateAction, Dispatch } from "react";
+
+import { iCadastro,iUserTechs, iLogin} from "./interfaces/ContextUser";
 
 import { toast } from "react-toastify";
-import { useContext } from "react";
+import { iInfoUserLogin } from "./interfaces/ContextUser";
 
-export const DadosUser = createContext({});
+export interface iInfoUser {
+  children: React.ReactNode;
+}
 
-function ContextDadosUser({ children }) {
-  const [infoUserLogin, setInfoUserLogin] = useState([]);
+export interface UserProviderData {
+  setInfoUserLogin: Dispatch<SetStateAction<iInfoUserLogin>>,
+  setRouter: Dispatch<SetStateAction<string>>,
+  cadastro: (product: iCadastro) => void,
+  login: (product: iLogin) => void,
+  setUsertech: Dispatch<SetStateAction<iUserTechs[]>>,
+  userTech: iUserTechs[],
+  loading: boolean,
+  getUserData: () => void,
+  router: any,
+  infoUserLogin: iInfoUserLogin ,
+}
+
+export const DadosUser = createContext<UserProviderData>({} as UserProviderData);
+
+function ContextDadosUser({ children }: iInfoUser) {
+  const [infoUserLogin, setInfoUserLogin] = useState<iInfoUserLogin>({} as iInfoUserLogin);
+  const [userTech, setUsertech] = useState<iUserTechs[]>([]);
 
   const [loading, setLoading] = useState(true);
-
-  const [userTech, setUsertech] = useState([]);
 
   const [router, setRouter] = useState("");
 
@@ -25,7 +43,7 @@ function ContextDadosUser({ children }) {
   async function getUserData() {
     if (tokken) {
       try {
-        instanceAxios.defaults.headers.authorization = `Bearer ${tokken}`;
+        instanceAxios.defaults.headers.common["Authorization"] = `Bearer ${tokken}`;
 
         const respose = await instanceAxios.get("/profile");
 
@@ -44,7 +62,7 @@ function ContextDadosUser({ children }) {
     getUserData();
   }, [tokken]);
 
-  async function login(dateLogin) {
+  async function login(dateLogin: iLogin) {
     try {
       const respose = await instanceAxios.post("/sessions", dateLogin);
       localStorage.setItem("tokken", respose.data.token);
@@ -53,6 +71,7 @@ function ContextDadosUser({ children }) {
       toast.success("Login com sucesso!", {
         position: toast.POSITION.TOP_RIGHT,
       });
+      navigate("/dashboard")
     } catch (error) {
       toast.error(`${error}`, {
         position: toast.POSITION.TOP_RIGHT,
@@ -61,7 +80,7 @@ function ContextDadosUser({ children }) {
     }
   }
 
-  async function cadastro(dateCadastro) {
+  async function cadastro(dateCadastro: iCadastro) {
     try {
       await instanceAxios.post("/users", dateCadastro);
       toast.success("Cadastro com sucesso!", {
@@ -97,4 +116,3 @@ function ContextDadosUser({ children }) {
 
 export default ContextDadosUser;
 
-export const ContexteDadosUserFunction = () => useContext(DadosUser);

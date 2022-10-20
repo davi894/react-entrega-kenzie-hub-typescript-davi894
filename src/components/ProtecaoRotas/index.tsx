@@ -3,9 +3,9 @@ import { Navigate, Outlet } from "react-router-dom";
 function ProtecaoRotas() {
   const token = localStorage.getItem("tokken");
 
-  if (!token) return <Navigate to="/login" />;
+  if (token) return <Outlet />;
 
-  return <Outlet />;
+  return <Navigate to="/login" />;
 }
 
 export default ProtecaoRotas

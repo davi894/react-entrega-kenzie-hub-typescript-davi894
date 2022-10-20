@@ -1,6 +1,5 @@
 
 import * as yup from 'yup';
-
 export const validacaoCadastro = yup.object().shape({
     bio: yup.string().required("Preenchimento da bio obrigatório"),
     contact: yup.string().required("Preenchimento do contato obrigatório"),
@@ -18,9 +17,8 @@ export const validacaoCadastro = yup.object().shape({
         .matches(/(\W)|_/, "Deve conter um caracter especial")
         .required("Preenchimento da senha obrigatório")
         .min(8, "no mínimo 8 caracteres"),
-
     confirmPassword: yup
         .string()
-        .oneOf([yup.ref("password")])
-        .required("Preenchimento da confirmação de senha obrigatório"),
+        .required("Preenchimento da confirmação de senha obrigatório")
+        .oneOf([yup.ref("password")], "senhas não iguais")
 });

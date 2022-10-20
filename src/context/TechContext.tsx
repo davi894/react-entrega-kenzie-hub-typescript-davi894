@@ -1,20 +1,29 @@
-import instanceAxios from "../services/Axios/Axios.js";
+import instanceAxios from "../services/Axios/Axios";
 import React, { useContext } from "react";
 
 import { toast } from "react-toastify";
 
 import { createContext, useState } from "react";
 
-import { ContexteDadosUserFunction } from "./ContextDadosUser.jsx";
+import { DadosUser } from "./ContextDadosUser";
 
-export const TechContext = createContext(() => {});
+import { iInfoUser } from "./ContextDadosUser";
 
-function TechContextUser({ children }) {
+import { UserTechProviderData } from "./interfaces/TechsUser";
+
+import { iCadastrarTech } from "./interfaces/TechsUser";
+
+import { iUserTechs } from "./interfaces/ContextUser";
+
+export const TechContext = createContext<UserTechProviderData>({} as UserTechProviderData)
+
+function TechContextUser({ children }: iInfoUser) {
+
   const [modal, setModal] = useState(false);
 
-  const { userTech, setUsertech, getUserData } = ContexteDadosUserFunction();
+  const { userTech, setUsertech, getUserData } = useContext(DadosUser);
 
-  async function adicionarTech(cadastrarTech) {
+  async function adicionarTech(cadastrarTech: iCadastrarTech) {
     try {
       const response = await instanceAxios.post("/users/techs", cadastrarTech);
 
@@ -28,14 +37,13 @@ function TechContextUser({ children }) {
         .error(`${error}`, {
           position: toast.POSITION.TOP_RIGHT,
         })
-        .then((resp) => resp);
     }
   }
 
-  async function removerTech(idTech) {
+  async function removerTech(deletarTech: iUserTechs) {
     try {
-      const response = await instanceAxios.delete(`/users/techs/${idTech}`);
-      if (response.status != 204) {
+      const response = await instanceAxios.delete(`/users/techs/${deletarTech.id}`);
+      if (response.status !== 204) {
         return toast.error("Não possível deletar tech", {
           position: toast.POSITION.TOP_RIGHT,
         });
@@ -63,4 +71,3 @@ function TechContextUser({ children }) {
 
 export default TechContextUser;
 
-export const TechContextUserFunction = () => useContext(TechContext);

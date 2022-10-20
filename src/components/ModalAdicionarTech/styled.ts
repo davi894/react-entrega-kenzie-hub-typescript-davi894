@@ -100,6 +100,10 @@ top:0;
 
             flex-direction:column;
 
+            p{
+                color:red;
+             }
+
             input,select{
                         background: #343B41;
     

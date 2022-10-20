@@ -2,28 +2,29 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Link, useNavigate } from "react-router-dom";
 
-import FormCadastro from "../FormCadastro/index.jsx";
+import { FormStyledLogin, SectionStyledLogin } from "./style";
 
-import { FormStyledLogin, SectionStyledLogin } from "./style.js";
+import { validacaoLogin } from "../../validations/loginUser";
 
-import { validacaoLogin } from "../../validations/loginUser.js";
+import { DadosUser } from "../../context/ContextDadosUser";
+import { iLogin } from "../../context/interfaces/ContextUser";
+import { useContext } from "react";
 
-import { ContexteDadosUserFunction } from "../../context/ContextDadosUser.jsx";
 
 function FormLogin() {
- 
-  const { login } = ContexteDadosUserFunction()
+
+  const { login } = useContext(DadosUser)
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<iLogin>({
     resolver: yupResolver(validacaoLogin),
   });
   const navigate = useNavigate();
 
-  const onSubmitFunction = (data) => {
+  const onSubmitFunction = (data: any) => {
     login(data);
 
     navigate("/dashboard");
@@ -40,8 +41,7 @@ function FormLogin() {
 
         <input
           id="email"
-          name="email"
-          type="texte"
+          type="text"
           placeholder="Digite seu email"
           {...register("email")}
         />
@@ -50,7 +50,6 @@ function FormLogin() {
 
         <input
           id="password"
-          name="password"
           type="password"
           placeholder="Digite sua senha"
           {...register("password")}
@@ -60,7 +59,7 @@ function FormLogin() {
 
         <div>
           <span>ainda não possui conta?</span>
-          <Link to={"/cadastro"} element={<FormCadastro />}>
+          <Link to={"/cadastro"} >
             <div>Cadastre-se</div>
           </Link>
         </div>

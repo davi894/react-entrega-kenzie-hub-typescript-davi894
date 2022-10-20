@@ -1,31 +1,31 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import FormLogin from "../FormLogin/index.jsx";
-
 import { Link, useNavigate } from "react-router-dom";
 
-import { FormStyledCadastro, SectionStyledCadastro } from "./style.js";
+import { FormStyledCadastro, SectionStyledCadastro } from "./style";
 
-import { validacaoCadastro } from "../../validations/cadastroUser.js";
+import { validacaoCadastro } from "../../validations/cadastroUser";
 
-import { ContexteDadosUserFunction } from "../../context/ContextDadosUser.jsx";
+import { useContext } from "react";
+import { DadosUser } from "../../context/ContextDadosUser";
+import { iCadastro } from "../../context/interfaces/ContextUser";
 
 function FormCadastro() {
- 
-  const { cadastro } = ContexteDadosUserFunction();
+
+  const { cadastro } = useContext(DadosUser);
 
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<iCadastro>({
     resolver: yupResolver(validacaoCadastro),
   });
   const navigate = useNavigate();
 
-  const onSubmitFunction = (data) => {
+  const onSubmitFunction = (data: any) => {
     cadastro(data);
 
     navigate("/login");
@@ -36,7 +36,7 @@ function FormCadastro() {
     <SectionStyledCadastro>
       <div>
         <h1>kenzie Hub</h1>
-        <Link to={"/login"} element={<FormLogin />}>
+        <Link to={"/login"} >
           <div>Voltar</div>
         </Link>
       </div>
@@ -49,7 +49,6 @@ function FormCadastro() {
         <label htmlFor="nome">Nome</label>
         <input
           id="nome"
-          name="name"
           type="text"
           placeholder="Digite seu nome"
           {...register("name")}
@@ -57,8 +56,7 @@ function FormCadastro() {
         <p> {errors.name?.message}</p>
         <label htmlFor="email">Email</label>
         <input
-          id="email"
-          name="email"
+            id="email"
           type="text"
           placeholder="Digite seu email"
           {...register("email")}
@@ -66,8 +64,7 @@ function FormCadastro() {
         <p>{errors.email?.message}</p>
         <label htmlFor="senha">Senha</label>
         <input
-          id="senha"
-          name="password"
+           id="senha"        
           type="password"
           placeholder="Digite sua senha"
           {...register("password")}
@@ -76,16 +73,14 @@ function FormCadastro() {
         <label htmlFor="confirmarSenha">Confirmar senha</label>
         <input
           id="confirmarSenha"
-          name="confirmPassword"
           type="password"
           placeholder="Digite novamente sua senha"
           {...register("confirmPassword")}
         />
-        <p>{errors.confirmPassword?.message}</p>
+        <p>{errors.confirmPassword?.message }</p>
         <label htmlFor="bio">Bio</label>
         <input
           id="bio"
-          name="bio"
           type="text"
           placeholder="Fale sobre você"
           {...register("bio")}
@@ -94,7 +89,6 @@ function FormCadastro() {
         <label htmlFor="contato">Contato</label>
         <input
           id="contato"
-          name="contact"
           type="text"
           placeholder="Opção de contato"
           {...register("contact")}
@@ -106,7 +100,6 @@ function FormCadastro() {
         </label>
 
         <select
-          name="course_module"
           id="selecionarModulo"
           {...register("course_module")}
         >

@@ -1,23 +1,21 @@
 import { SectionModalStyled } from "./styled";
 
-import { TechContext } from "../../context/TechContext.jsx";
+import { TechContext } from "../../context/TechContext";
 import * as yup from "yup";
 import { useContext } from "react";
 
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { DadosUser } from "../../context/ContextDadosUser.jsx";
+import { iCadastrarTech } from "../../context/interfaces/TechsUser";
 
-import { TechContextUserFunction } from "../../context/TechContext.jsx";
+function ModalAdicionarTech() {
 
-function ModalAdicionarTech({ children }) {
-
-  const { adicionarTech, setModal } = TechContextUserFunction()
+  const { adicionarTech, setModal } = useContext(TechContext)
 
   const techCadastro = yup.object().shape({
-    title: yup.string(),
-    status: yup.string(),
+    title: yup.string().required("Preencha o campo!"),
+    status: yup.string().required("Selecione um valor!"),
   });
 
   const {
@@ -25,13 +23,12 @@ function ModalAdicionarTech({ children }) {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<iCadastrarTech>({
     resolver: yupResolver(techCadastro),
   });
 
   return (
     <SectionModalStyled>
-      {children}
       <article>
         <div>
           <h2>Cadastrar Tecnologia</h2>
@@ -40,14 +37,15 @@ function ModalAdicionarTech({ children }) {
 
         <form action="" onSubmit={handleSubmit(adicionarTech)}>
           <label htmlFor="tech">Nome</label>
-          <input name="title" id="tech" type="text" {...register("title")} />
-
+          <input id="tech" type="text" {...register("title")} />
+          <p>{errors.title?.message}</p>
           <label htmlFor="nivel">Selecionar status</label>
-          <select name="status" id="nivel" {...register("status")}>
+          <select id="nivel" {...register("status")}>
             <option value="Iniciante">Iniciante</option>
             <option value="intermediário">intermediário</option>
             <option value="Avançado">Avançado</option>
           </select>
+          <p>{errors.status?.message}</p>
           <button>Cadastrar Tecnologia</button>
         </form>
       </article>

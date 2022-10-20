@@ -8,26 +8,9 @@ const GlobalStyled = createGlobalStyle`
   padding: 0;
 }
 
-
-  button{
+button{
     cursor: pointer;
-  }
-
- /*  input{
-    border: none;
-    color: #F8F9FA;
-    &:focus{
-                background-color: #343B41;
-                outline: none ;
-                border-color:#343B41;
-                box-shadow: 0 0 5px #F8F9FA;
-                } 
-  }
-
-  select{
-    color: #F8F9FA;
-  } */
-
+}
 `
 
 const AppStyled = styled.section`
