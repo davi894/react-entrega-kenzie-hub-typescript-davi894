@@ -4,14 +4,45 @@ import { useNavigate } from "react-router-dom";
 
 import { createContext, useEffect, useState, SetStateAction, Dispatch } from "react";
 
-import { iCadastro,iUserTechs, iLogin} from "./interfaces/ContextUser";
+import { iCadastro, iUserTechs, iLogin, iInfoUserLogin,iWorkUser } from "./interfaces/ContextUser";
 
 import { toast } from "react-toastify";
-import { iInfoUserLogin } from "./interfaces/ContextUser";
 
 export interface iInfoUser {
   children: React.ReactNode;
 }
+
+interface iRespLoginAxios {
+
+}
+
+interface iRespCadastroAxios {
+  id: string,
+	name: string,
+	email: string,
+	course_module: string,
+	bio: string,
+	contact: string,
+	created_at: string,
+	updated_at: string,
+	avatar_url: string | null
+}
+
+
+interface iRespgGetProfileAxios {
+    id: string,
+    name: string,
+    email: string,
+    course_module: string,
+    bio: string,
+    contact: string,
+    techs: iUserTechs[],
+    works: iWorkUser[],
+    created_at: string,
+    updated_at: string,
+    avatar_url: string | null
+  }
+
 
 export interface UserProviderData {
   setInfoUserLogin: Dispatch<SetStateAction<iInfoUserLogin>>,
@@ -22,8 +53,8 @@ export interface UserProviderData {
   userTech: iUserTechs[],
   loading: boolean,
   getUserData: () => void,
-  router: any,
-  infoUserLogin: iInfoUserLogin ,
+  router: string,
+  infoUserLogin: iInfoUserLogin,
 }
 
 export const DadosUser = createContext<UserProviderData>({} as UserProviderData);
@@ -45,7 +76,7 @@ function ContextDadosUser({ children }: iInfoUser) {
       try {
         instanceAxios.defaults.headers.common["Authorization"] = `Bearer ${tokken}`;
 
-        const respose = await instanceAxios.get("/profile");
+        const respose = await instanceAxios.get<iRespgGetProfileAxios, any>("/profile");
 
         setUsertech(respose.data.techs);
         setInfoUserLogin(respose.data);
@@ -64,7 +95,7 @@ function ContextDadosUser({ children }: iInfoUser) {
 
   async function login(dateLogin: iLogin) {
     try {
-      const respose = await instanceAxios.post("/sessions", dateLogin);
+      const respose = await instanceAxios.post<iInfoUserLogin, any>("/sessions", dateLogin);
       localStorage.setItem("tokken", respose.data.token);
       setInfoUserLogin(respose.data.user);
       setUsertech(respose.data.user.techs);
@@ -82,7 +113,7 @@ function ContextDadosUser({ children }: iInfoUser) {
 
   async function cadastro(dateCadastro: iCadastro) {
     try {
-      await instanceAxios.post("/users", dateCadastro);
+      await instanceAxios.post<iRespCadastroAxios>("/users", dateCadastro);
       toast.success("Cadastro com sucesso!", {
         position: toast.POSITION.TOP_RIGHT,
       });

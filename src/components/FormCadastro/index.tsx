@@ -25,7 +25,7 @@ function FormCadastro() {
   });
   const navigate = useNavigate();
 
-  const onSubmitFunction = (data: any) => {
+  const onSubmitFunction = (data: iCadastro) => {
     cadastro(data);
 
     navigate("/login");

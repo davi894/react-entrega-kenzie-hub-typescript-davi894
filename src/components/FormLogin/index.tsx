@@ -24,7 +24,7 @@ function FormLogin() {
   });
   const navigate = useNavigate();
 
-  const onSubmitFunction = (data: any) => {
+  const onSubmitFunction = (data: iLogin) => {
     login(data);
 
     navigate("/dashboard");
